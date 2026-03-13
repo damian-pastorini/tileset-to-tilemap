@@ -31,7 +31,7 @@
     },
     "dependencies": {
         "@anthropic-ai/sdk": "0.78.0",
-        "@google/genai": "1.44.0",
+        "@google/genai": "1.45.0",
         "@reldens/server-utils": "^0.47.0",
         "@reldens/utils": "^0.55.0",
         "image-js": "1.4.0",
