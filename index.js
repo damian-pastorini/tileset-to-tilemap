@@ -24,7 +24,7 @@ const { TilesetImagePersister } = require('./lib/tileset-image-persister');
 const { TilesetResizer } = require('./lib/tileset-resizer');
 const { TilesetsMerge } = require('./lib/tilesets-merge');
 const { Helpers } = require('./lib/utils/helpers');
-const constants = require('./lib/utils/constants');
+const { TilesetConst } = require('./lib/utils/constants');
 
 module.exports = {
     AiAnalyzer,
@@ -47,5 +47,5 @@ module.exports = {
     TilesetResizer,
     TilesetsMerge,
     Helpers,
-    constants
+    TilesetConst
 };
