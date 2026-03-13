@@ -1,0 +1,40 @@
+{
+    "name": "@reldens/tileset-to-tilemap",
+    "version": "0.1.0",
+    "description": "Reldens - Tileset to Tile Map",
+    "author": "Damian A. Pastorini",
+    "license": "MIT",
+    "homepage": "https://github.com/damian-pastorini/tileset-to-tilemap",
+    "main": "index.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/damian-pastorini/tileset-to-tilemap.git"
+    },
+    "keywords": [
+        "reldens",
+        "tile",
+        "tileset",
+        "map",
+        "tiled",
+        "ai",
+        "detect",
+        "cluster",
+        "game",
+        "nodejs",
+        "javascript"
+    ],
+    "bugs": {
+        "url": "https://github.com/damian-pastorini/tileset-to-tilemap/issues"
+    },
+    "scripts": {
+        "test": "node tests/run.js"
+    },
+    "dependencies": {
+        "@anthropic-ai/sdk": "0.78.0",
+        "@google/genai": "1.44.0",
+        "@reldens/server-utils": "^0.47.0",
+        "@reldens/utils": "^0.55.0",
+        "image-js": "1.4.0",
+        "sharp": "0.34.5"
+    }
+}
