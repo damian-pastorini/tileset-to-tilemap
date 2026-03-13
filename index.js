@@ -23,10 +23,12 @@ const { TilesetImageMerger } = require('./lib/tileset-image-merger');
 const { TilesetImagePersister } = require('./lib/tileset-image-persister');
 const { TilesetResizer } = require('./lib/tileset-resizer');
 const { TilesetsMerge } = require('./lib/tilesets-merge');
+const { Requirements } = require('./lib/requirements');
 const { Helpers } = require('./lib/utils/helpers');
 const { TilesetConst } = require('./lib/utils/constants');
 
 module.exports = {
+    Requirements,
     AiAnalyzer,
     AiProviderCaller,
     AnnotatedImageBuilder,
