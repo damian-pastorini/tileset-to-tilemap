@@ -1,6 +1,6 @@
 {
     "name": "@reldens/tileset-to-tilemap",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "description": "Reldens - Tileset to Tile Map",
     "author": "Damian A. Pastorini",
     "license": "MIT",
@@ -35,6 +35,8 @@
         "@reldens/server-utils": "^0.47.0",
         "@reldens/utils": "^0.55.0",
         "image-js": "1.4.0",
+        "archiver": "7.0.1",
+        "multer": "2.1.1",
         "sharp": "0.34.5"
     }
 }

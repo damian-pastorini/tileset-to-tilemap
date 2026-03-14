@@ -23,6 +23,17 @@ let { TestAiProviderCaller } = require('./unit/test-ai-provider-caller');
 let { TestClusterDetector } = require('./unit/test-cluster-detector');
 let { TestClusterCropper } = require('./unit/test-cluster-cropper');
 let { TestTilesetImageMerger } = require('./unit/test-tileset-image-merger');
+let { TestRequirements } = require('./unit/test-requirements');
+let { TestTilesetConst } = require('./unit/test-tileset-const');
+let { TestRequestParser } = require('./unit/test-request-parser');
+let { TestIndexRoute } = require('./unit/test-index-route');
+let { TestSessionDeleteRoute } = require('./unit/test-session-delete-route');
+let { TestSessionSaveRoute } = require('./unit/test-session-save-route');
+let { TestGenerateRoute } = require('./unit/test-generate-route');
+let { TestMergeRoute } = require('./unit/test-merge-route');
+let { TestAiDetectRoute } = require('./unit/test-ai-detect-route');
+let { TestAiNameRoute } = require('./unit/test-ai-name-route');
+let { TestAiAssignLayersRoute } = require('./unit/test-ai-assign-layers-route');
 
 let testClasses = [
     TestHelpers,
@@ -42,7 +53,18 @@ let testClasses = [
     TestAiProviderCaller,
     TestClusterDetector,
     TestClusterCropper,
-    TestTilesetImageMerger
+    TestTilesetImageMerger,
+    TestRequirements,
+    TestTilesetConst,
+    TestRequestParser,
+    TestIndexRoute,
+    TestSessionDeleteRoute,
+    TestSessionSaveRoute,
+    TestGenerateRoute,
+    TestMergeRoute,
+    TestAiDetectRoute,
+    TestAiNameRoute,
+    TestAiAssignLayersRoute
 ];
 
 function getTestMethods(instance)

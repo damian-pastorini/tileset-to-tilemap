@@ -4,6 +4,7 @@
  *
  */
 
+const { TilesetAnalyzerServer } = require('./lib/tileset-analyzer-server');
 const { AiAnalyzer } = require('./lib/ai-analyzer');
 const { AiProviderCaller } = require('./lib/ai-provider-caller');
 const { AnnotatedImageBuilder } = require('./lib/annotated-image-builder');
@@ -49,5 +50,6 @@ module.exports = {
     TilesetResizer,
     TilesetsMerge,
     Helpers,
-    TilesetConst
+    TilesetConst,
+    TilesetAnalyzerServer
 };
