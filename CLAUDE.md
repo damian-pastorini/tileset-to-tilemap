@@ -97,7 +97,7 @@ Helpers.calcTileRows(256, 0, 0, 32)     // 8
     imageId: 'tileset.png',           // filename only
     filename: 'tileset.png',          // original filename
     filePath: '/abs/path/input/sessionId/tileset.png',
-    imageUrl: '/tileset-image/sessionId/tileset.png',
+    imageUrl: 'tileset-image/sessionId/tileset.png',
     imageWidth: 512,
     imageHeight: 256,
     tileWidth: 32,
@@ -119,7 +119,13 @@ Helpers.calcTileRows(256, 0, 0, 32)     // 8
 ```javascript
 let { Requirements } = require('@reldens/tileset-to-tilemap');
 
-let requirements = new Requirements();
+let requirements = new Requirements({
+    ollamaHost: 'http://localhost:11434',
+    ollamaModel: 'qwen2.5vl:7b',
+    ollamaAvailableModels: '',
+    anthropicApiKey: process.env.ANTHROPIC_API_KEY,
+    geminiApiKey: process.env.GEMINI_API_KEY
+});
 let providers = await requirements.resolveAiProviders();
 // providers = ['ollama:qwen2.5vl:7b', 'claude', 'gemini'] — only available ones
 ```
@@ -140,7 +146,17 @@ let spacing = 0;
 let tilesetColumns = Helpers.calcTileColumns(meta.width, margin, spacing, tileWidth);
 let tileRows = Helpers.calcTileRows(meta.height, margin, spacing, tileHeight);
 
-let analyzer = new AiAnalyzer();
+let analyzer = new AiAnalyzer({
+    claudeModel: 'claude-sonnet-4-6',
+    claudeMaxTokens: 512,
+    claudeMaxTokensDetection: 4096,
+    geminiModel: 'gemini-2.0-flash-preview-image-generation',
+    ollamaHost: 'http://localhost:11434',
+    ollamaNumCtx: 8192,
+    ollamaNumPredict: 2000,
+    skipAi: false,
+    validatePass: false
+});
 let result = await analyzer.analyzeImage(
     imageBuffer,
     tilesetColumns,
@@ -163,7 +179,14 @@ let result = await analyzer.analyzeImage(
 ```javascript
 let { ClusterDetector } = require('@reldens/tileset-to-tilemap');
 
-let detector = new ClusterDetector();
+let detector = new ClusterDetector({
+    minClusterTiles: 1,
+    clusterColorDistance: 30,
+    clusterVarianceThreshold: 600,
+    clusterMinTileFillPct: 10,
+    clusterSplitByGap: 1,
+    elementBorderColorDistance: 20
+});
 let detected = await detector.detect(
     imageBuffer,
     tilesetColumns,
@@ -350,37 +373,43 @@ All saved to `generated-tile-map-elements/output/{sessionId}/`:
 
 Input files stored in `generated-tile-map-elements/input/{sessionId}/`.
 
-## Environment Variables (read by package)
+## Constructor Options
 
-### Claude
-- `ANTHROPIC_API_KEY` — required to enable Claude
-- `CLAUDE_MODEL` — default: `claude-sonnet-4-6`
-- `CLAUDE_MAX_TOKENS` — naming token budget, default: 512
-- `CLAUDE_MAX_TOKENS_DETECTION` — detection token budget, default: 4096
+The package reads no `process.env` directly. All configuration is passed via constructor options. API keys for Claude and Gemini are read by their respective SDKs from `ANTHROPIC_API_KEY` / `GEMINI_API_KEY` env vars automatically.
 
-### Gemini
-- `GEMINI_API_KEY` — required to enable Gemini
-- `GEMINI_MODEL` — default: `gemini-2.0-flash-preview-image-generation`
-- `GEMINI_MAX_TOKENS` — default: 512
-- `GEMINI_MAX_TOKENS_DETECTION` — default: 4096
+### `Requirements(options)`
+- `ollamaHost` — default: `'http://localhost:11434'`
+- `ollamaModel` — default: `'qwen2.5vl:7b'`
+- `ollamaAvailableModels` — comma-separated string or array, default: `''`
+- `anthropicApiKey` — used to detect Claude availability
+- `geminiApiKey` — used to detect Gemini availability
 
-### Ollama
-- `OLLAMA_HOST` — default: `http://localhost:11434`
-- `OLLAMA_MODEL` — default: `qwen2.5vl:7b`
-- `OLLAMA_AVAILABLE_MODELS` — comma-separated model list; each becomes a separate provider entry
-- `OLLAMA_NUM_CTX` — context size, default: 8192
-- `OLLAMA_NUM_PREDICT` — default: 2000
-- Per-model overrides: replace `.`, `:`, `-` with `_` — e.g. `OLLAMA_NUM_CTX_qwen2_5vl_7b`
+### `AiProviderCaller(options)` / `AiAnalyzer(options)` / `MultiAiAnalyzer(options)`
+- `claudeModel` — default: `'claude-sonnet-4-6'`
+- `claudeMaxTokens` — default: `512`
+- `claudeMaxTokensDetection` — default: `4096`
+- `geminiModel` — default: `'gemini-2.0-flash-preview-image-generation'`
+- `geminiMaxTokens` — default: `512`
+- `geminiMaxTokensDetection` — default: `4096`
+- `ollamaHost` — default: `'http://localhost:11434'`
+- `ollamaNumCtx` — default: `8192`
+- `ollamaNumPredict` — default: `2000`
+- `skipAi` — default: `false`
+- `validatePass` — default: `false`
 
-### Cluster Detection
-- `MIN_CLUSTER_TILES` — discard clusters smaller than this, default: 1
-- `CLUSTER_EMPTY_ALPHA_THRESHOLD` — alpha below this = transparent, default: 10
-- `CLUSTER_COLOR_DISTANCE` — RGB distance from bgColor = background, default: 30
-- `CLUSTER_VARIANCE_THRESHOLD` — exclude low-variance tiles, default: 600
-- `CLUSTER_MIN_TILE_FILL_PCT` — min % of tile pixels that must be non-background, default: 10
-- `CLUSTER_SPLIT_BY_GAP` — split clusters at internal empty tile rows/cols, default: 1
-- `ELEMENT_BORDER_COLOR_DISTANCE` — max color distance between adjacent tile edges for single-element classification, default: 20
+### `ClusterDetector(options)` / `ClusterCropper(options)`
+- `minClusterTiles` — discard clusters smaller than this, default: `1`
+- `clusterEmptyAlphaThreshold` — alpha below this = transparent, default: `10`
+- `clusterColorDistance` — RGB distance from bgColor = background, default: `30`
+- `clusterVarianceThreshold` — exclude low-variance tiles, default: `600`
+- `clusterMinTileFillPct` — min % of tile pixels non-background, default: `10`
+- `clusterSplitByGap` — split clusters at internal empty tile rows/cols, default: `1`
+- `elementBorderColorDistance` — max color distance between adjacent tile edges for single-element classification, default: `20`
 
-### Other
-- `VALIDATE_PASS` — run verify step after naming, default: 0
-- `SKIP_AI` — skip all AI analysis, default: 0
+### `TilesetAnalyzerServer(rootDir, options)`
+- `publicDir` — path to static files dir, default: `'public'`
+- `showAiControls` — show manual AI buttons in UI, default: `false`
+- `aiProviders` — array of provider strings, default: `[]`
+- `skipAi` — disable AI analysis, default: `false`
+- `skipIndex` — skip registering `GET /` (for admin embed), default: `false`
+- All `AiAnalyzer` / `ClusterDetector` options are also accepted and passed through
