@@ -15,3 +15,7 @@ node_modules/
 /CLAUDE.local.md
 /.claude/skills/
 .idea
+/.claude/hook-state.json
+/.playwright-mcp
+/test-results
+/tests/e2e/reports

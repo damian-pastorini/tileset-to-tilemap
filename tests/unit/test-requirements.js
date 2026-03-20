@@ -21,10 +21,8 @@ class TestRequirements
             process.env.OLLAMA_HOST = savedHost;
         });
         await this.runner.test('sets ollamaTagsUrl from env OLLAMA_HOST', () => {
-            process.env.OLLAMA_HOST = 'http://myhost:9999';
-            let req = new Requirements();
+            let req = new Requirements({ollamaHost: 'http://myhost:9999'});
             assert.ok(req.ollamaTagsUrl.includes('myhost:9999'));
-            delete process.env.OLLAMA_HOST;
         });
     }
 
@@ -55,28 +53,14 @@ class TestRequirements
             process.env.GEMINI_API_KEY = savedGemini;
         });
         await this.runner.test('includes claude when ANTHROPIC_API_KEY set', async () => {
-            let savedClaude = process.env.ANTHROPIC_API_KEY;
-            let savedGemini = process.env.GEMINI_API_KEY;
-            process.env.ANTHROPIC_API_KEY = 'test-key';
-            delete process.env.GEMINI_API_KEY;
-            let req = new Requirements();
-            req.ollamaTagsUrl = 'http://localhost:19999/api/tags';
+            let req = new Requirements({anthropicApiKey: 'test-key', ollamaHost: 'http://localhost:19999'});
             let result = await req.resolveAiProviders();
             assert.ok(result.includes('claude'));
-            process.env.ANTHROPIC_API_KEY = savedClaude;
-            process.env.GEMINI_API_KEY = savedGemini;
         });
         await this.runner.test('includes gemini when GEMINI_API_KEY set', async () => {
-            let savedClaude = process.env.ANTHROPIC_API_KEY;
-            let savedGemini = process.env.GEMINI_API_KEY;
-            delete process.env.ANTHROPIC_API_KEY;
-            process.env.GEMINI_API_KEY = 'test-key';
-            let req = new Requirements();
-            req.ollamaTagsUrl = 'http://localhost:19999/api/tags';
+            let req = new Requirements({geminiApiKey: 'test-key', ollamaHost: 'http://localhost:19999'});
             let result = await req.resolveAiProviders();
             assert.ok(result.includes('gemini'));
-            process.env.ANTHROPIC_API_KEY = savedClaude;
-            process.env.GEMINI_API_KEY = savedGemini;
         });
     }
 }

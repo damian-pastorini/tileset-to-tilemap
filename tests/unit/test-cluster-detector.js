@@ -139,17 +139,7 @@ class TestClusterDetector
             assert.ok('elementBorderThreshold' in cfg);
         });
         await this.runner.test('defaults are correct when env is unset', () => {
-            let keys = [
-                'CLUSTER_EMPTY_ALPHA_THRESHOLD', 'CLUSTER_COLOR_DISTANCE', 'MIN_CLUSTER_TILES',
-                'CLUSTER_VARIANCE_THRESHOLD', 'CLUSTER_MIN_TILE_FILL_PCT',
-                'CLUSTER_SPLIT_BY_GAP', 'ELEMENT_BORDER_COLOR_DISTANCE'
-            ];
-            let saved = {};
-            for(let k of keys){ saved[k] = process.env[k]; delete process.env[k]; }
-            let cfg = this.detector.loadDetectConfig();
-            for(let k of keys){
-                if(saved[k] !== undefined){ process.env[k] = saved[k]; }
-            }
+            let cfg = new ClusterDetector().loadDetectConfig();
             assert.strictEqual(cfg.alphaThreshold, 10);
             assert.strictEqual(cfg.colorThreshold, 30);
             assert.strictEqual(cfg.minClusterTiles, 1);
@@ -159,19 +149,11 @@ class TestClusterDetector
             assert.strictEqual(cfg.elementBorderThreshold, 20);
         });
         await this.runner.test('reads custom env values', () => {
-            let saved = process.env.MIN_CLUSTER_TILES;
-            process.env.MIN_CLUSTER_TILES = '3';
-            let cfg = this.detector.loadDetectConfig();
-            if(saved !== undefined){ process.env.MIN_CLUSTER_TILES = saved; }
-            if(saved === undefined){ delete process.env.MIN_CLUSTER_TILES; }
+            let cfg = new ClusterDetector({minClusterTiles: 3}).loadDetectConfig();
             assert.strictEqual(cfg.minClusterTiles, 3);
         });
         await this.runner.test('splitByGap is false when env is 0', () => {
-            let saved = process.env.CLUSTER_SPLIT_BY_GAP;
-            process.env.CLUSTER_SPLIT_BY_GAP = '0';
-            let cfg = this.detector.loadDetectConfig();
-            if(saved !== undefined){ process.env.CLUSTER_SPLIT_BY_GAP = saved; }
-            if(saved === undefined){ delete process.env.CLUSTER_SPLIT_BY_GAP; }
+            let cfg = new ClusterDetector({splitByGap: '0'}).loadDetectConfig();
             assert.strictEqual(cfg.splitByGap, false);
         });
     }

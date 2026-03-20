@@ -20,6 +20,8 @@ const { MultiAiAnalyzer } = require('./lib/multi-ai-analyzer');
 const { TileBoundsCalculator } = require('./lib/tile-bounds-calculator');
 const { TilePixelAnalyzer } = require('./lib/tile-pixel-analyzer');
 const { TilesetFilesBuilder } = require('./lib/tileset-files-builder');
+const { TilesetCompositeConfigBuilder } = require('./lib/tileset-composite-config-builder');
+const { MapsWizardConfigBuilder } = require('./lib/maps-wizard-config-builder');
 const { TilesetImageMerger } = require('./lib/tileset-image-merger');
 const { TilesetImagePersister } = require('./lib/tileset-image-persister');
 const { TilesetResizer } = require('./lib/tileset-resizer');
@@ -45,6 +47,8 @@ module.exports = {
     TileBoundsCalculator,
     TilePixelAnalyzer,
     TilesetFilesBuilder,
+    TilesetCompositeConfigBuilder,
+    MapsWizardConfigBuilder,
     TilesetImageMerger,
     TilesetImagePersister,
     TilesetResizer,
