@@ -83,9 +83,9 @@ class TestTilesetFilesBuilder
             let result = this.builder.buildOutputEntry('session-123', 'composite.json');
             assert.ok(result.downloadUrl.includes('composite.json'));
         });
-        await this.runner.test('downloadUrl starts with /download/', () => {
+        await this.runner.test('downloadUrl starts with output/', () => {
             let result = this.builder.buildOutputEntry('session-123', 'file.json');
-            assert.ok(result.downloadUrl.startsWith('/download/'));
+            assert.ok(result.downloadUrl.startsWith('output/'));
         });
     }
 }
