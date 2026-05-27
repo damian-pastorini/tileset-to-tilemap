@@ -1,5 +1,5 @@
-let { TestRunner, assert } = require('../lib/test-runner');
-let { TilesetConst } = require('../../lib/utils/constants');
+const { TestRunner, assert } = require('../lib/test-runner');
+const { TilesetConst } = require('../../lib/constants');
 
 class TestTilesetConst
 {

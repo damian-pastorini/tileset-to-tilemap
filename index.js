@@ -27,8 +27,8 @@ const { TilesetImagePersister } = require('./lib/tileset-image-persister');
 const { TilesetResizer } = require('./lib/tileset-resizer');
 const { TilesetsMerge } = require('./lib/tilesets-merge');
 const { Requirements } = require('./lib/requirements');
-const { Helpers } = require('./lib/utils/helpers');
-const { TilesetConst } = require('./lib/utils/constants');
+const { Helpers } = require('./lib/helpers');
+const { TilesetConst } = require('./lib/constants');
 
 module.exports = {
     Requirements,
