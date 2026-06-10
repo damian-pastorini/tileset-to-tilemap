@@ -413,9 +413,10 @@ All saved to `generated-tile-map-elements/output/{sessionId}/`:
 
 - `session-editor-state.json`: full tileset+element state (used by Load session).
 - `elements-config.json`: same state formatted for readability.
-- `{tileset-name}.png`: copy of original tileset PNG.
+- `{tileset-name}.png`: copy of the tileset PNG, named after `tileset.mapName` when set (the file `composite.json` references).
+- `ai-buffer/{imageId}`: per-session source copy named by upload id (`TilesetConst.OUTPUT_AI_BUFFER_SUB_FOLDER`; the imageId already includes the file extension); written by `persistImages`, used by `loadImageBuffer` as the fallback when the `input/` copy is missing (a legacy top-level `output/{sessionId}/{imageId}` is still checked last).
 - `{tileset-name}-{element-name}.json`: per-element Tiled-format map.
-- `{tileset-name}-annotated.png`: tileset with element overlays and grid.
+- `{tileset-name}-annotated.png`: tileset with element overlays and grid (dimensions read from the image via sharp metadata).
 - `composite.json`: all elements on one Tiled map.
 - `map-generator-config.json`: Reldens map generator config.
 
