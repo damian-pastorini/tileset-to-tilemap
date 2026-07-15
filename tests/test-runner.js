@@ -4,8 +4,8 @@
  *
  */
 
-let assert = require('node:assert');
-let { Logger } = require('@reldens/utils');
+const assert = require('node:assert');
+const { Logger } = require('@reldens/utils');
 
 class TestRunner
 {

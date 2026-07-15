@@ -1,11 +1,18 @@
-let { TestRunner, assert } = require('../lib/test-runner');
-let { Requirements } = require('../../lib/requirements');
+const { TestRunner, assert } = require('../test-runner');
+const { Requirements } = require('../../lib/requirements');
 
 class TestRequirements
 {
     constructor()
     {
         this.runner = new TestRunner();
+    }
+
+    buildRequirements(overrides)
+    {
+        return new Requirements(Object.assign({
+            ollamaHost: 'http://localhost:19999'
+        }, overrides));
     }
 
     async testConstructor()
@@ -30,8 +37,7 @@ class TestRequirements
     {
         this.runner.group('checkOllama');
         await this.runner.test('returns false when Ollama unreachable', async () => {
-            let req = new Requirements();
-            req.ollamaTagsUrl = 'http://localhost:19999/api/tags';
+            let req = this.buildRequirements({});
             let result = await req.checkOllama();
             assert.strictEqual(result, false);
         });
@@ -45,20 +51,19 @@ class TestRequirements
             let savedGemini = process.env.GEMINI_API_KEY;
             delete process.env.ANTHROPIC_API_KEY;
             delete process.env.GEMINI_API_KEY;
-            let req = new Requirements();
-            req.ollamaTagsUrl = 'http://localhost:19999/api/tags';
+            let req = this.buildRequirements({});
             let result = await req.resolveAiProviders();
             assert.ok(Array.isArray(result));
             process.env.ANTHROPIC_API_KEY = savedClaude;
             process.env.GEMINI_API_KEY = savedGemini;
         });
         await this.runner.test('includes claude when ANTHROPIC_API_KEY set', async () => {
-            let req = new Requirements({anthropicApiKey: 'test-key', ollamaHost: 'http://localhost:19999'});
+            let req = this.buildRequirements({anthropicApiKey: 'test-key'});
             let result = await req.resolveAiProviders();
             assert.ok(result.includes('claude'));
         });
         await this.runner.test('includes gemini when GEMINI_API_KEY set', async () => {
-            let req = new Requirements({geminiApiKey: 'test-key', ollamaHost: 'http://localhost:19999'});
+            let req = this.buildRequirements({geminiApiKey: 'test-key'});
             let result = await req.resolveAiProviders();
             assert.ok(result.includes('gemini'));
         });

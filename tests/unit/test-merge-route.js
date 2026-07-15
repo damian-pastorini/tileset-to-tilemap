@@ -1,5 +1,5 @@
-let { TestRunner, assert } = require('../lib/test-runner');
-let { MergeRoute } = require('../../lib/routes/merge');
+const { TestRunner, assert } = require('../test-runner');
+const { MergeRoute } = require('../../lib/routes/merge');
 
 class TestMergeRoute
 {
@@ -11,19 +11,30 @@ class TestMergeRoute
     buildMockRes()
     {
         let mock = {};
-        mock.statusCode = null;
-        mock.body = null;
         mock.written = [];
         mock.ended = false;
-        mock.status = (code) => { mock.statusCode = code; return mock; };
-        mock.json = (data) => { mock.body = data; };
-        mock.setHeader = () => {};
-        mock.flushHeaders = () => {};
-        mock.flush = () => {};
-        mock.write = (chunk) => { mock.written.push(chunk); };
-        mock.end = () => { mock.ended = true; };
+        mock.setHeader = () => {
+        };
+        mock.flushHeaders = () => {
+        };
+        mock.flush = () => {
+        };
+        mock.write = (chunk) => {
+            mock.written.push(chunk);
+        };
+        mock.end = () => {
+            mock.ended = true;
+        };
         mock.socket = null;
         return mock;
+    }
+
+    buildRequest(overrides)
+    {
+        return {body: Object.assign({
+            sessionId: 'sess',
+            tilesets: [{}]
+        }, overrides)};
     }
 
     async testSendEvent()
@@ -60,7 +71,7 @@ class TestMergeRoute
         await this.runner.test('sends error event when only one tileset provided', async () => {
             let route = new MergeRoute('/root');
             let res = this.buildMockRes();
-            await route.handle({body: {sessionId: 'sess', tilesets: [{}]}}, res);
+            await route.handle(this.buildRequest({}), res);
             assert.ok(res.written.length > 0);
             assert.ok(res.written[0].includes('error'));
             assert.ok(res.ended);
@@ -68,14 +79,14 @@ class TestMergeRoute
         await this.runner.test('sends error event when tilesets is not array', async () => {
             let route = new MergeRoute('/root');
             let res = this.buildMockRes();
-            await route.handle({body: {sessionId: 'sess', tilesets: 'bad'}}, res);
+            await route.handle(this.buildRequest({tilesets: 'bad'}), res);
             assert.ok(res.written.length > 0);
             assert.ok(res.written[0].includes('error'));
         });
         await this.runner.test('sends error event when tilesets array is empty', async () => {
             let route = new MergeRoute('/root');
             let res = this.buildMockRes();
-            await route.handle({body: {sessionId: 'sess', tilesets: []}}, res);
+            await route.handle(this.buildRequest({tilesets: []}), res);
             assert.ok(res.written.length > 0);
             assert.ok(res.written[0].includes('error'));
         });

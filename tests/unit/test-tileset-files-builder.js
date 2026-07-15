@@ -1,5 +1,5 @@
-let { TestRunner, assert } = require('../lib/test-runner');
-let { TilesetFilesBuilder } = require('../../lib/tileset-files-builder');
+const { TestRunner, assert } = require('../test-runner');
+const { TilesetFilesBuilder } = require('../../lib/tileset-files-builder');
 
 class TestTilesetFilesBuilder
 {
@@ -9,17 +9,24 @@ class TestTilesetFilesBuilder
         this.builder = new TilesetFilesBuilder();
     }
 
+    buildElement(overrides)
+    {
+        return Object.assign({
+            layers: [{type: 'collisions', tiles: [[1, 2], [3, 4]]}]
+        }, overrides);
+    }
+
     async testBuildElementCluster()
     {
         this.runner.suite('TilesetFilesBuilder');
         this.runner.group('buildElementCluster');
         await this.runner.test('returns null for element with no tiles', () => {
-            let element = {layers: [{type: 'collisions', tiles: []}]};
+            let element = this.buildElement({layers: [{type: 'collisions', tiles: []}]});
             let result = this.builder.buildElementCluster(element);
             assert.strictEqual(result, null);
         });
         await this.runner.test('returns cluster with correct bounds', () => {
-            let element = {layers: [{type: 'collisions', tiles: [[1, 2], [3, 4]]}]};
+            let element = this.buildElement({});
             let result = this.builder.buildElementCluster(element);
             assert.strictEqual(result.minRow, 1);
             assert.strictEqual(result.maxRow, 3);
@@ -27,17 +34,17 @@ class TestTilesetFilesBuilder
             assert.strictEqual(result.maxCol, 4);
         });
         await this.runner.test('merges tiles from multiple layers without duplicates', () => {
-            let element = {
+            let element = this.buildElement({
                 layers: [
                     {type: 'over-player', tiles: [[0, 0], [0, 1]]},
                     {type: 'collisions', tiles: [[0, 0], [1, 0]]}
                 ]
-            };
+            });
             let result = this.builder.buildElementCluster(element);
             assert.strictEqual(result.tiles.length, 3);
         });
         await this.runner.test('single tile element', () => {
-            let element = {layers: [{type: 'collisions', tiles: [[5, 7]]}]};
+            let element = this.buildElement({layers: [{type: 'collisions', tiles: [[5, 7]]}]});
             let result = this.builder.buildElementCluster(element);
             assert.strictEqual(result.minRow, 5);
             assert.strictEqual(result.maxRow, 5);

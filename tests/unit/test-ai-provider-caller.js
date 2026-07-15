@@ -1,5 +1,5 @@
-let { TestRunner, assert } = require('../lib/test-runner');
-let { AiProviderCaller } = require('../../lib/ai-provider-caller');
+const { TestRunner, assert } = require('../test-runner');
+const { AiProviderCaller } = require('../../lib/ai-provider-caller');
 
 class TestAiProviderCaller
 {

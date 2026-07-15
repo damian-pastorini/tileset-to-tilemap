@@ -1,5 +1,5 @@
-let { TestRunner, assert } = require('../lib/test-runner');
-let { ClusterDetector } = require('../../lib/cluster-detector');
+const { TestRunner, assert } = require('../test-runner');
+const { ClusterDetector } = require('../../lib/cluster-detector');
 
 class TestClusterDetector
 {
@@ -129,32 +129,32 @@ class TestClusterDetector
     {
         this.runner.group('loadDetectConfig');
         await this.runner.test('returns object with all required keys', () => {
-            let cfg = this.detector.loadDetectConfig();
-            assert.ok('alphaThreshold' in cfg);
-            assert.ok('colorThreshold' in cfg);
-            assert.ok('minClusterTiles' in cfg);
-            assert.ok('varianceThreshold' in cfg);
-            assert.ok('minFillPct' in cfg);
-            assert.ok('splitByGap' in cfg);
-            assert.ok('elementBorderThreshold' in cfg);
+            let detectConfig = this.detector.loadDetectConfig();
+            assert.ok('alphaThreshold' in detectConfig);
+            assert.ok('colorThreshold' in detectConfig);
+            assert.ok('minClusterTiles' in detectConfig);
+            assert.ok('varianceThreshold' in detectConfig);
+            assert.ok('minFillPct' in detectConfig);
+            assert.ok('splitByGap' in detectConfig);
+            assert.ok('elementBorderThreshold' in detectConfig);
         });
         await this.runner.test('defaults are correct when env is unset', () => {
-            let cfg = new ClusterDetector().loadDetectConfig();
-            assert.strictEqual(cfg.alphaThreshold, 10);
-            assert.strictEqual(cfg.colorThreshold, 30);
-            assert.strictEqual(cfg.minClusterTiles, 1);
-            assert.strictEqual(cfg.varianceThreshold, 0);
-            assert.strictEqual(cfg.minFillPct, 5);
-            assert.strictEqual(cfg.splitByGap, true);
-            assert.strictEqual(cfg.elementBorderThreshold, 20);
+            let detectConfig = new ClusterDetector().loadDetectConfig();
+            assert.strictEqual(detectConfig.alphaThreshold, 10);
+            assert.strictEqual(detectConfig.colorThreshold, 30);
+            assert.strictEqual(detectConfig.minClusterTiles, 1);
+            assert.strictEqual(detectConfig.varianceThreshold, 0);
+            assert.strictEqual(detectConfig.minFillPct, 5);
+            assert.strictEqual(detectConfig.splitByGap, true);
+            assert.strictEqual(detectConfig.elementBorderThreshold, 20);
         });
         await this.runner.test('reads custom env values', () => {
-            let cfg = new ClusterDetector({minClusterTiles: 3}).loadDetectConfig();
-            assert.strictEqual(cfg.minClusterTiles, 3);
+            let detectConfig = new ClusterDetector({minClusterTiles: 3}).loadDetectConfig();
+            assert.strictEqual(detectConfig.minClusterTiles, 3);
         });
         await this.runner.test('splitByGap is false when env is 0', () => {
-            let cfg = new ClusterDetector({splitByGap: '0'}).loadDetectConfig();
-            assert.strictEqual(cfg.splitByGap, false);
+            let detectConfig = new ClusterDetector({splitByGap: '0'}).loadDetectConfig();
+            assert.strictEqual(detectConfig.splitByGap, false);
         });
     }
 }

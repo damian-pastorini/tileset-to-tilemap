@@ -1,21 +1,22 @@
-let { TestRunner, assert } = require('../lib/test-runner');
-let { SessionDeleteRoute } = require('../../lib/routes/session-delete');
+const { TestRunner, assert } = require('../test-runner');
+const { TestFixtures } = require('../test-fixtures');
+const { SessionDeleteRoute } = require('../../lib/routes/session-delete');
 
 class TestSessionDeleteRoute
 {
     constructor()
     {
         this.runner = new TestRunner();
+        this.route = new SessionDeleteRoute('/root');
     }
 
-    buildMockRes()
+    buildRequest(overrides)
     {
-        let mock = {};
-        mock.statusCode = null;
-        mock.body = null;
-        mock.status = (code) => { mock.statusCode = code; return mock; };
-        mock.json = (data) => { mock.body = data; };
-        return mock;
+        return {
+            params: Object.assign({
+                sessionId: 'session-001'
+            }, overrides)
+        };
     }
 
     async testHandle()
@@ -23,34 +24,29 @@ class TestSessionDeleteRoute
         this.runner.suite('SessionDeleteRoute');
         this.runner.group('handle');
         await this.runner.test('rejects empty sessionId with 400', () => {
-            let route = new SessionDeleteRoute('/root');
-            let res = this.buildMockRes();
-            route.handle({params: {sessionId: ''}}, res);
+            let res = TestFixtures.buildJsonMockRes();
+            this.route.handle(this.buildRequest({sessionId: ''}), res);
             assert.strictEqual(res.statusCode, 400);
             assert.strictEqual(res.body.success, false);
         });
         await this.runner.test('rejects sessionId containing forward slash', () => {
-            let route = new SessionDeleteRoute('/root');
-            let res = this.buildMockRes();
-            route.handle({params: {sessionId: 'a/b'}}, res);
+            let res = TestFixtures.buildJsonMockRes();
+            this.route.handle(this.buildRequest({sessionId: 'a/b'}), res);
             assert.strictEqual(res.statusCode, 400);
         });
         await this.runner.test('rejects sessionId containing double dot', () => {
-            let route = new SessionDeleteRoute('/root');
-            let res = this.buildMockRes();
-            route.handle({params: {sessionId: '..'}}, res);
+            let res = TestFixtures.buildJsonMockRes();
+            this.route.handle(this.buildRequest({sessionId: '..'}), res);
             assert.strictEqual(res.statusCode, 400);
         });
         await this.runner.test('rejects sessionId containing backslash', () => {
-            let route = new SessionDeleteRoute('/root');
-            let res = this.buildMockRes();
-            route.handle({params: {sessionId: 'a\\b'}}, res);
+            let res = TestFixtures.buildJsonMockRes();
+            this.route.handle(this.buildRequest({sessionId: 'a\\b'}), res);
             assert.strictEqual(res.statusCode, 400);
         });
         await this.runner.test('rejects path traversal sequence', () => {
-            let route = new SessionDeleteRoute('/root');
-            let res = this.buildMockRes();
-            route.handle({params: {sessionId: '../etc/passwd'}}, res);
+            let res = TestFixtures.buildJsonMockRes();
+            this.route.handle(this.buildRequest({sessionId: '../etc/passwd'}), res);
             assert.strictEqual(res.statusCode, 400);
         });
     }

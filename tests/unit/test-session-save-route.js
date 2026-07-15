@@ -1,21 +1,12 @@
-let { TestRunner, assert } = require('../lib/test-runner');
-let { SessionSaveRoute } = require('../../lib/routes/session-save');
+const { TestRunner, assert } = require('../test-runner');
+const { TestFixtures } = require('../test-fixtures');
+const { SessionSaveRoute } = require('../../lib/routes/session-save');
 
 class TestSessionSaveRoute
 {
     constructor()
     {
         this.runner = new TestRunner();
-    }
-
-    buildMockRes()
-    {
-        let mock = {};
-        mock.statusCode = null;
-        mock.body = null;
-        mock.status = (code) => { mock.statusCode = code; return mock; };
-        mock.json = (data) => { mock.body = data; };
-        return mock;
     }
 
     async testMergeTileset()
@@ -74,14 +65,14 @@ class TestSessionSaveRoute
         this.runner.group('handle');
         await this.runner.test('returns 400 when sessionId missing', () => {
             let route = new SessionSaveRoute('/root');
-            let res = this.buildMockRes();
+            let res = TestFixtures.buildJsonMockRes();
             route.handle({body: {}}, res);
             assert.strictEqual(res.statusCode, 400);
             assert.ok(res.body.error);
         });
         await this.runner.test('returns 400 when sessionId is only special chars', () => {
             let route = new SessionSaveRoute('/root');
-            let res = this.buildMockRes();
+            let res = TestFixtures.buildJsonMockRes();
             route.handle({body: {sessionId: '!!!'}}, res);
             assert.strictEqual(res.statusCode, 400);
         });

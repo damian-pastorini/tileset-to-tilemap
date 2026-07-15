@@ -1,5 +1,5 @@
-let { TestRunner, assert } = require('../lib/test-runner');
-let { AnnotatedImageBuilder } = require('../../lib/annotated-image-builder');
+const { TestRunner, assert } = require('../test-runner');
+const { AnnotatedImageBuilder } = require('../../lib/annotated-image-builder');
 
 class TestAnnotatedImageBuilder
 {
@@ -7,6 +7,18 @@ class TestAnnotatedImageBuilder
     {
         this.runner = new TestRunner();
         this.builder = new AnnotatedImageBuilder();
+    }
+
+    buildTileset(overrides)
+    {
+        return Object.assign({
+            tileWidth: 32,
+            tileHeight: 32,
+            spacing: 0,
+            margin: 0,
+            filteredTiles: [],
+            elements: []
+        }, overrides);
     }
 
     async testColorForIndex()
@@ -35,38 +47,25 @@ class TestAnnotatedImageBuilder
     {
         this.runner.group('buildSvgOverlay');
         await this.runner.test('returns string starting with svg tag', () => {
-            let tileset = {tileWidth: 32, tileHeight: 32, spacing: 0, margin: 0, filteredTiles: [], elements: []};
-            let result = this.builder.buildSvgOverlay(tileset, 64, 64);
+            let result = this.builder.buildSvgOverlay(this.buildTileset(), 64, 64);
             assert.ok(result.startsWith('<svg'));
         });
         await this.runner.test('includes image dimensions from passed metadata', () => {
-            let tileset = {tileWidth: 32, tileHeight: 32, spacing: 0, margin: 0, filteredTiles: [], elements: []};
-            let result = this.builder.buildSvgOverlay(tileset, 128, 96);
+            let result = this.builder.buildSvgOverlay(this.buildTileset(), 128, 96);
             assert.ok(result.includes('width="128"'));
             assert.ok(result.includes('height="96"'));
         });
         await this.runner.test('includes grid lines', () => {
-            let tileset = {tileWidth: 32, tileHeight: 32, spacing: 0, margin: 0, filteredTiles: [], elements: []};
-            let result = this.builder.buildSvgOverlay(tileset, 64, 64);
+            let result = this.builder.buildSvgOverlay(this.buildTileset(), 64, 64);
             assert.ok(result.includes('<line'));
         });
         await this.runner.test('includes filtered tile rects', () => {
-            let tileset = {tileWidth: 32, tileHeight: 32, spacing: 0, margin: 0, filteredTiles: [[0, 0]], elements: []};
+            let tileset = this.buildTileset({filteredTiles: [[0, 0]]});
             let result = this.builder.buildSvgOverlay(tileset, 64, 64);
             assert.ok(result.includes('#888888'));
         });
         await this.runner.test('includes element overlay rects', () => {
-            let tileset = {
-                tileWidth: 32,
-                tileHeight: 32,
-                spacing: 0,
-                margin: 0,
-                filteredTiles: [],
-                elements: [{
-                    colorIndex: 0,
-                    layers: [{tiles: [[0, 0]]}]
-                }]
-            };
+            let tileset = this.buildTileset({elements: [{colorIndex: 0, layers: [{tiles: [[0, 0]]}]}]});
             let result = this.builder.buildSvgOverlay(tileset, 64, 64);
             assert.ok(result.includes('fill-opacity="0.4"'));
         });
@@ -77,8 +76,7 @@ class TestAnnotatedImageBuilder
             assert.ok(!result.includes('NaN'));
         });
         await this.runner.test('closes svg tag', () => {
-            let tileset = {tileWidth: 32, tileHeight: 32, spacing: 0, margin: 0, filteredTiles: [], elements: []};
-            let result = this.builder.buildSvgOverlay(tileset, 64, 64);
+            let result = this.builder.buildSvgOverlay(this.buildTileset(), 64, 64);
             assert.ok(result.endsWith('</svg>'));
         });
     }

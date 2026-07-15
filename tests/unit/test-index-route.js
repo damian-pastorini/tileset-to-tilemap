@@ -1,5 +1,5 @@
-let { TestRunner, assert } = require('../lib/test-runner');
-let { IndexRoute } = require('../../lib/routes/index');
+const { TestRunner, assert } = require('../test-runner');
+const { IndexRoute } = require('../../lib/routes/index');
 
 class TestIndexRoute
 {

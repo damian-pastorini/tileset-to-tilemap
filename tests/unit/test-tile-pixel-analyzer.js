@@ -1,5 +1,5 @@
-let { TestRunner, assert } = require('../lib/test-runner');
-let { TilePixelAnalyzer } = require('../../lib/tile-pixel-analyzer');
+const { TestRunner, assert } = require('../test-runner');
+const { TilePixelAnalyzer } = require('../../lib/tile-pixel-analyzer');
 
 class TestTilePixelAnalyzer
 {

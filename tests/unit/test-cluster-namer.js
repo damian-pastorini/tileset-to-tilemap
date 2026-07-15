@@ -1,5 +1,5 @@
-let { TestRunner, assert } = require('../lib/test-runner');
-let { ClusterNamer } = require('../../lib/cluster-namer');
+const { TestRunner, assert } = require('../test-runner');
+const { ClusterNamer } = require('../../lib/cluster-namer');
 
 class TestClusterNamer
 {
@@ -7,6 +7,14 @@ class TestClusterNamer
     {
         this.runner = new TestRunner();
         this.namer = new ClusterNamer();
+    }
+
+    buildLayer(overrides)
+    {
+        return Object.assign({
+            type: 'over-player',
+            tiles: [[0, 0], [0, 1]]
+        }, overrides);
     }
 
     async testIsValidElementName()
@@ -140,7 +148,7 @@ class TestClusterNamer
         });
         await this.runner.test('adds accepted tiles to assignedKeys', () => {
             let assigned = new Set();
-            let result = this.namer.buildCleanLayerTiles([[1, 2]], assigned, null);
+            this.namer.buildCleanLayerTiles([[1, 2]], assigned, null);
             assert.ok(assigned.has('1,2'));
         });
         await this.runner.test('no validKeys means all non-assigned pass', () => {
@@ -154,20 +162,20 @@ class TestClusterNamer
     {
         this.runner.group('deduplicateLayers');
         await this.runner.test('keeps valid assigned tiles', () => {
-            let parsed = [{type: 'over-player', tiles: [[0, 0], [0, 1]]}];
+            let parsed = [this.buildLayer({})];
             let fallback = [[0, 0], [0, 1]];
             let result = this.namer.deduplicateLayers(parsed, fallback);
             assert.strictEqual(result[0].type, 'over-player');
             assert.deepStrictEqual(result[0].tiles, [[0, 0], [0, 1]]);
         });
         await this.runner.test('filters out hallucinated tiles not in fallback', () => {
-            let parsed = [{type: 'over-player', tiles: [[0, 0], [5, 5]]}];
+            let parsed = [this.buildLayer({tiles: [[0, 0], [5, 5]]})];
             let fallback = [[0, 0], [1, 0]];
             let result = this.namer.deduplicateLayers(parsed, fallback);
             assert.deepStrictEqual(result[0].tiles, [[0, 0]]);
         });
         await this.runner.test('puts unassigned fallback tiles into collisions', () => {
-            let parsed = [{type: 'over-player', tiles: [[0, 0]]}];
+            let parsed = [this.buildLayer({tiles: [[0, 0]]})];
             let fallback = [[0, 0], [1, 0]];
             let result = this.namer.deduplicateLayers(parsed, fallback);
             let collisionLayer = result.find(l => 'collisions' === l.type);
@@ -176,8 +184,8 @@ class TestClusterNamer
         });
         await this.runner.test('no duplicate tiles across layers', () => {
             let parsed = [
-                {type: 'over-player', tiles: [[0, 0], [0, 1]]},
-                {type: 'collisions', tiles: [[0, 1], [1, 0]]}
+                this.buildLayer({}),
+                this.buildLayer({type: 'collisions', tiles: [[0, 1], [1, 0]]})
             ];
             let fallback = [[0, 0], [0, 1], [1, 0]];
             let result = this.namer.deduplicateLayers(parsed, fallback);

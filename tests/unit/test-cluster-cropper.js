@@ -1,5 +1,5 @@
-let { TestRunner, assert } = require('../lib/test-runner');
-let { ClusterCropper } = require('../../lib/cluster-cropper');
+const { TestRunner, assert } = require('../test-runner');
+const { ClusterCropper } = require('../../lib/cluster-cropper');
 
 class TestClusterCropper
 {

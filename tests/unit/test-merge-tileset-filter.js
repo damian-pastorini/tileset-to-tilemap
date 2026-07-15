@@ -1,5 +1,5 @@
-let { TestRunner, assert } = require('../lib/test-runner');
-let { MergeTilesetFilter } = require('../../lib/merge-tileset-filter');
+const { TestRunner, assert } = require('../test-runner');
+const { MergeTilesetFilter } = require('../../lib/merge-tileset-filter');
 
 let mockTileset = {
     tilesetColumns: 4,
@@ -24,6 +24,25 @@ class TestMergeTilesetFilter
     {
         this.runner = new TestRunner();
         this.filter = new MergeTilesetFilter();
+    }
+
+    buildSizedTileset(overrides)
+    {
+        return Object.assign({
+            tileWidth: 32,
+            tileHeight: 32
+        }, overrides);
+    }
+
+    buildMergeRequest(overrides)
+    {
+        return Object.assign({
+            tileset: mockTileset,
+            includeElements: false,
+            includeClusters: false,
+            stateIndex: 0,
+            autoResize: false
+        }, overrides);
     }
 
     async testFilterTilesetElements()
@@ -55,8 +74,8 @@ class TestMergeTilesetFilter
         this.runner.group('resolveRefTileSize');
         await this.runner.test('bigger strategy returns max', () => {
             let tilesets = [
-                {tileWidth: 16, tileHeight: 16},
-                {tileWidth: 32, tileHeight: 32}
+                this.buildSizedTileset({tileWidth: 16, tileHeight: 16}),
+                this.buildSizedTileset({})
             ];
             let result = this.filter.resolveRefTileSize(tilesets, 'bigger');
             assert.strictEqual(result.refTileWidth, 32);
@@ -64,8 +83,8 @@ class TestMergeTilesetFilter
         });
         await this.runner.test('smaller strategy returns min', () => {
             let tilesets = [
-                {tileWidth: 16, tileHeight: 16},
-                {tileWidth: 32, tileHeight: 32}
+                this.buildSizedTileset({tileWidth: 16, tileHeight: 16}),
+                this.buildSizedTileset({})
             ];
             let result = this.filter.resolveRefTileSize(tilesets, 'smaller');
             assert.strictEqual(result.refTileWidth, 16);
@@ -73,8 +92,8 @@ class TestMergeTilesetFilter
         });
         await this.runner.test('same sizes return that size', () => {
             let tilesets = [
-                {tileWidth: 32, tileHeight: 32},
-                {tileWidth: 32, tileHeight: 32}
+                this.buildSizedTileset({}),
+                this.buildSizedTileset({})
             ];
             let result = this.filter.resolveRefTileSize(tilesets, 'bigger');
             assert.strictEqual(result.refTileWidth, 32);
@@ -85,19 +104,19 @@ class TestMergeTilesetFilter
     {
         this.runner.group('filterMergeTilesets');
         await this.runner.test('returns filteredTilesets and originalStateIndices', () => {
-            let mergeData = [{tileset: mockTileset, includeElements: false, includeClusters: false, stateIndex: 0, autoResize: false}];
+            let mergeData = [this.buildMergeRequest({})];
             let result = this.filter.filterMergeTilesets(mergeData);
             assert.ok(Array.isArray(result.filteredTilesets));
             assert.ok(Array.isArray(result.originalStateIndices));
         });
         await this.runner.test('excludes tilesets with no matching elements', () => {
             let emptyTileset = Object.assign({}, mockTileset, {elements: []});
-            let mergeData = [{tileset: emptyTileset, includeElements: true, includeClusters: false, stateIndex: 0, autoResize: false}];
+            let mergeData = [this.buildMergeRequest({tileset: emptyTileset, includeElements: true})];
             let result = this.filter.filterMergeTilesets(mergeData);
             assert.strictEqual(result.filteredTilesets.length, 0);
         });
         await this.runner.test('preserves stateIndex in results', () => {
-            let mergeData = [{tileset: mockTileset, includeElements: false, includeClusters: false, stateIndex: 3, autoResize: false}];
+            let mergeData = [this.buildMergeRequest({stateIndex: 3})];
             let result = this.filter.filterMergeTilesets(mergeData);
             assert.strictEqual(result.originalStateIndices[0], 3);
         });
