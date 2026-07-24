@@ -4,6 +4,7 @@
  *
  */
 
+const { TilesetAnalyzerServer } = require('./lib/tileset-analyzer-server');
 const { AiAnalyzer } = require('./lib/ai-analyzer');
 const { AiProviderCaller } = require('./lib/ai-provider-caller');
 const { AnnotatedImageBuilder } = require('./lib/annotated-image-builder');
@@ -19,14 +20,18 @@ const { MultiAiAnalyzer } = require('./lib/multi-ai-analyzer');
 const { TileBoundsCalculator } = require('./lib/tile-bounds-calculator');
 const { TilePixelAnalyzer } = require('./lib/tile-pixel-analyzer');
 const { TilesetFilesBuilder } = require('./lib/tileset-files-builder');
+const { TilesetCompositeConfigBuilder } = require('./lib/tileset-composite-config-builder');
+const { MapsWizardConfigBuilder } = require('./lib/maps-wizard-config-builder');
 const { TilesetImageMerger } = require('./lib/tileset-image-merger');
 const { TilesetImagePersister } = require('./lib/tileset-image-persister');
 const { TilesetResizer } = require('./lib/tileset-resizer');
 const { TilesetsMerge } = require('./lib/tilesets-merge');
-const { Helpers } = require('./lib/utils/helpers');
-const { TilesetConst } = require('./lib/utils/constants');
+const { Requirements } = require('./lib/requirements');
+const { Helpers } = require('./lib/helpers');
+const { TilesetConst } = require('./lib/constants');
 
 module.exports = {
+    Requirements,
     AiAnalyzer,
     AiProviderCaller,
     AnnotatedImageBuilder,
@@ -42,10 +47,13 @@ module.exports = {
     TileBoundsCalculator,
     TilePixelAnalyzer,
     TilesetFilesBuilder,
+    TilesetCompositeConfigBuilder,
+    MapsWizardConfigBuilder,
     TilesetImageMerger,
     TilesetImagePersister,
     TilesetResizer,
     TilesetsMerge,
     Helpers,
-    TilesetConst
+    TilesetConst,
+    TilesetAnalyzerServer
 };

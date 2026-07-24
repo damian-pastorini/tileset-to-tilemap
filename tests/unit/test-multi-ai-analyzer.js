@@ -1,5 +1,5 @@
-let { TestRunner, assert } = require('../lib/test-runner');
-let { MultiAiAnalyzer } = require('../../lib/multi-ai-analyzer');
+const { TestRunner, assert } = require('../test-runner');
+const { MultiAiAnalyzer } = require('../../lib/multi-ai-analyzer');
 
 class TestMultiAiAnalyzer
 {
@@ -75,7 +75,7 @@ class TestMultiAiAnalyzer
                 {name: 'rock-001'}
             ];
             let result = this.analyzer.deduplicateNames(elements);
-            let treeCount = result.filter(e => e.name.startsWith('tree')).length;
+            let treeCount = result.filter(element => element.name.startsWith('tree')).length;
             assert.strictEqual(treeCount, 2);
             assert.strictEqual(result[2].name, 'rock-001');
         });

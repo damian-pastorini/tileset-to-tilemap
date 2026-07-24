@@ -1,5 +1,5 @@
-let { TestRunner, assert } = require('../lib/test-runner');
-let { Helpers } = require('../../lib/utils/helpers');
+const { TestRunner, assert } = require('../test-runner');
+const { Helpers } = require('../../lib/helpers');
 
 class TestHelpers
 {

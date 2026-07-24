@@ -1,5 +1,5 @@
-let { TestRunner, assert } = require('../lib/test-runner');
-let { ClusterNamerPrompts } = require('../../lib/cluster-namer-prompts');
+const { TestRunner, assert } = require('../test-runner');
+const { ClusterNamerPrompts } = require('../../lib/cluster-namer-prompts');
 
 class TestClusterNamerPrompts
 {

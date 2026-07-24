@@ -1,5 +1,5 @@
-let { TestRunner, assert } = require('../lib/test-runner');
-let { TileBoundsCalculator } = require('../../lib/tile-bounds-calculator');
+const { TestRunner, assert } = require('../test-runner');
+const { TileBoundsCalculator } = require('../../lib/tile-bounds-calculator');
 
 class TestTileBoundsCalculator
 {
