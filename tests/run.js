@@ -4,36 +4,38 @@
  *
  */
 
-let { Logger } = require('@reldens/utils');
-let { TestHelpers } = require('./unit/test-helpers');
-let { TestTileBoundsCalculator } = require('./unit/test-tile-bounds-calculator');
-let { TestTilePixelAnalyzer } = require('./unit/test-tile-pixel-analyzer');
-let { TestMapFormatter } = require('./unit/test-map-formatter');
-let { TestClusterNamerPrompts } = require('./unit/test-cluster-namer-prompts');
-let { TestClusterNamer } = require('./unit/test-cluster-namer');
-let { TestElementBuilder } = require('./unit/test-element-builder');
-let { TestCompositeBuilder } = require('./unit/test-composite-builder');
-let { TestMultiAiAnalyzer } = require('./unit/test-multi-ai-analyzer');
-let { TestAnnotatedImageBuilder } = require('./unit/test-annotated-image-builder');
-let { TestMergeTilesetFilter } = require('./unit/test-merge-tileset-filter');
-let { TestTilesetsMerge } = require('./unit/test-tilesets-merge');
-let { TestTilesetFilesBuilder } = require('./unit/test-tileset-files-builder');
-let { TestTilesetImagePersister } = require('./unit/test-tileset-image-persister');
-let { TestAiProviderCaller } = require('./unit/test-ai-provider-caller');
-let { TestClusterDetector } = require('./unit/test-cluster-detector');
-let { TestClusterCropper } = require('./unit/test-cluster-cropper');
-let { TestTilesetImageMerger } = require('./unit/test-tileset-image-merger');
-let { TestRequirements } = require('./unit/test-requirements');
-let { TestTilesetConst } = require('./unit/test-tileset-const');
-let { TestRequestParser } = require('./unit/test-request-parser');
-let { TestIndexRoute } = require('./unit/test-index-route');
-let { TestSessionDeleteRoute } = require('./unit/test-session-delete-route');
-let { TestSessionSaveRoute } = require('./unit/test-session-save-route');
-let { TestGenerateRoute } = require('./unit/test-generate-route');
-let { TestMergeRoute } = require('./unit/test-merge-route');
-let { TestAiDetectRoute } = require('./unit/test-ai-detect-route');
-let { TestAiNameRoute } = require('./unit/test-ai-name-route');
-let { TestAiAssignLayersRoute } = require('./unit/test-ai-assign-layers-route');
+const { Logger } = require('@reldens/utils');
+const { TestHelpers } = require('./unit/test-helpers');
+const { TestTileBoundsCalculator } = require('./unit/test-tile-bounds-calculator');
+const { TestTilePixelAnalyzer } = require('./unit/test-tile-pixel-analyzer');
+const { TestMapFormatter } = require('./unit/test-map-formatter');
+const { TestClusterNamerPrompts } = require('./unit/test-cluster-namer-prompts');
+const { TestClusterNamer } = require('./unit/test-cluster-namer');
+const { TestElementBuilder } = require('./unit/test-element-builder');
+const { TestCompositeBuilder } = require('./unit/test-composite-builder');
+const { TestCompositeTileAnnotationBuilder } = require('./unit/test-composite-tile-annotation-builder');
+const { TestTileAnimationsBuilder } = require('./unit/test-tile-animations-builder');
+const { TestMultiAiAnalyzer } = require('./unit/test-multi-ai-analyzer');
+const { TestAnnotatedImageBuilder } = require('./unit/test-annotated-image-builder');
+const { TestMergeTilesetFilter } = require('./unit/test-merge-tileset-filter');
+const { TestTilesetsMerge } = require('./unit/test-tilesets-merge');
+const { TestTilesetFilesBuilder } = require('./unit/test-tileset-files-builder');
+const { TestTilesetImagePersister } = require('./unit/test-tileset-image-persister');
+const { TestAiProviderCaller } = require('./unit/test-ai-provider-caller');
+const { TestClusterDetector } = require('./unit/test-cluster-detector');
+const { TestClusterCropper } = require('./unit/test-cluster-cropper');
+const { TestTilesetImageMerger } = require('./unit/test-tileset-image-merger');
+const { TestRequirements } = require('./unit/test-requirements');
+const { TestTilesetConst } = require('./unit/test-tileset-const');
+const { TestRequestParser } = require('./unit/test-request-parser');
+const { TestIndexRoute } = require('./unit/test-index-route');
+const { TestSessionDeleteRoute } = require('./unit/test-session-delete-route');
+const { TestSessionSaveRoute } = require('./unit/test-session-save-route');
+const { TestGenerateRoute } = require('./unit/test-generate-route');
+const { TestMergeRoute } = require('./unit/test-merge-route');
+const { TestAiDetectRoute } = require('./unit/test-ai-detect-route');
+const { TestAiNameRoute } = require('./unit/test-ai-name-route');
+const { TestAiAssignLayersRoute } = require('./unit/test-ai-assign-layers-route');
 
 let testClasses = [
     TestHelpers,
@@ -44,6 +46,8 @@ let testClasses = [
     TestClusterNamer,
     TestElementBuilder,
     TestCompositeBuilder,
+    TestCompositeTileAnnotationBuilder,
+    TestTileAnimationsBuilder,
     TestMultiAiAnalyzer,
     TestAnnotatedImageBuilder,
     TestMergeTilesetFilter,

@@ -35,6 +35,20 @@ class TestCompositeBuilder
         }, overrides);
     }
 
+    buildAnimatedTileset(overrides)
+    {
+        return this.buildTileset(Object.assign({
+            spots: [],
+            animationsDefaultDuration: 200,
+            tileAnimations: [{
+                name: 'water',
+                baseTile: 4,
+                defaultDuration: null,
+                frames: [{tile: 4, duration: null}, {tile: 5, duration: 300}]
+            }]
+        }, overrides));
+    }
+
     buildPackElement(overrides)
     {
         return Object.assign({
@@ -133,6 +147,38 @@ class TestCompositeBuilder
             let result = this.builder.buildCompositeJSON([this.buildTileset({})]);
             assert.ok(Array.isArray(result.layers));
             assert.ok(result.layers.length > 0);
+        });
+    }
+
+    async testBuildCompositeJSONTileAnimations()
+    {
+        this.runner.group('buildCompositeJSON tile animations');
+        await this.runner.test('tileset entry contains the animation with tileset local ids', () => {
+            let result = this.builder.buildCompositeJSON([this.buildAnimatedTileset({})]);
+            assert.deepStrictEqual(result.tilesets[0].tiles, [
+                {id: 4, animation: [{duration: 200, tileid: 4}, {duration: 300, tileid: 5}]}
+            ]);
+        });
+        await this.runner.test('animated tile annotated as ground tile keeps both', () => {
+            let tileset = this.buildAnimatedTileset({tileOptions: {groundTile: 4}});
+            let result = this.builder.buildCompositeJSON([tileset]);
+            assert.deepStrictEqual(result.tilesets[0].tiles, [{
+                id: 4,
+                properties: [{name: 'key', type: 'string', value: 'groundTile'}],
+                animation: [{duration: 200, tileid: 4}, {duration: 300, tileid: 5}]
+            }]);
+        });
+        await this.runner.test('animation with an unused base tile is not emitted', () => {
+            let tileset = this.buildAnimatedTileset({
+                tileAnimations: [{
+                    name: 'water',
+                    baseTile: 9,
+                    defaultDuration: null,
+                    frames: [{tile: 10, duration: null}]
+                }]
+            });
+            let result = this.builder.buildCompositeJSON([tileset]);
+            assert.ok(!result.tilesets[0].tiles);
         });
     }
 }
