@@ -69,7 +69,13 @@ of the tiles the tileset actually uses. The used set is the union of:
   the tile options (ground, path, surroundings, corners, borders) and from every spot (spot tile, surroundings,
   corners, inner and outer walls),
 - every tile of every layer of every element of the tileset, computed as `tile[0] * tilesetColumns + tile[1]` from
-  the element layer tile pairs.
+  the element layer tile pairs,
+- the variation tiles appended by `CompositeTileAnnotationBuilder.appendVariationFlatIds()`: the tile options
+  `randomGroundTiles` and every spot `spotTileVariations`. These are painted by the generator into the
+  `ground-variations` and `spot-layer-ground-variations-*` layers, so a tile used only as a variation IS used on
+  the final map. Leaving them out silently dropped the animations of every variation tile while keeping the ones
+  of the neighbour role tiles, which renders as a partially animated area in game while the map file looks right
+  in Tiled (Tiled draws frame one).
 
 An animation whose base tile is not in that union is dropped. The reason is the optimizer: the optimized tileset
 image only contains used tiles, and an animation on an unused base tile would force that tile plus all of its

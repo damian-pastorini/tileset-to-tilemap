@@ -64,6 +64,27 @@ class TestCompositeTileAnnotationBuilder
             assert.deepStrictEqual(result[0].id, 2);
             assert.ok(!result[0].animation);
         });
+        await this.runner.test('animated base tile used as a spot variation reaches the annotations', () => {
+            let tileset = this.buildAnimatedTileset(12, [{tile: 13, duration: null}]);
+            let spots = [{name: 'water-spot', spotTile: 6, spotTileVariations: [12]}];
+            let result = this.builder.buildTileAnnotations(null, spots, tileset);
+            assert.ok(this.hasAnimationForId(result, 12));
+        });
+        await this.runner.test('animated base tile used as a ground variation reaches the annotations', () => {
+            let tileset = this.buildAnimatedTileset(12, [{tile: 13, duration: null}]);
+            let result = this.builder.buildTileAnnotations({randomGroundTiles: [12]}, [], tileset);
+            assert.ok(this.hasAnimationForId(result, 12));
+        });
+    }
+
+    hasAnimationForId(entries, tileId)
+    {
+        for(let entry of entries){
+            if(tileId === entry.id && entry.animation){
+                return true;
+            }
+        }
+        return false;
     }
 
     async testBuildTileAnnotationsWithoutAnimations()
