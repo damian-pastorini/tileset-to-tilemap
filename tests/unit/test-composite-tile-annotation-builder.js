@@ -17,6 +17,32 @@ class TestCompositeTileAnnotationBuilder
         });
     }
 
+    async testGroundTilesAreAnnotatedAndParked()
+    {
+        this.runner.suite('CompositeTileAnnotationBuilder');
+        this.runner.group('groundTiles selection');
+        await this.runner.test('every selected ground tile gets its own groundTile annotation', () => {
+            let result = this.builder.buildTileAnnotations({groundTiles: [49, 51, 53]}, [], null);
+            assert.deepStrictEqual(result, [
+                {id: 49, properties: [{name: 'key', type: 'string', value: 'groundTile'}]},
+                {id: 51, properties: [{name: 'key', type: 'string', value: 'groundTile'}]},
+                {id: 53, properties: [{name: 'key', type: 'string', value: 'groundTile'}]}
+            ]);
+        });
+        await this.runner.test('the selected ground tiles are collected so they are kept in the tileset', () => {
+            let ids = this.builder.collectAnnotatedFlatIds({groundTiles: [49, 51]}, []);
+            assert.strictEqual(-1 !== ids.indexOf(49), true);
+            assert.strictEqual(-1 !== ids.indexOf(51), true);
+        });
+        await this.runner.test('the map border walls tiles are collected so they are kept in the tileset', () => {
+            let mapBorderWallsTiles = {'-1,-1': 69, '0,0': 118, '1,1': 167};
+            let ids = this.builder.collectAnnotatedFlatIds({mapBorderWallsTiles}, []);
+            assert.strictEqual(-1 !== ids.indexOf(69), true);
+            assert.strictEqual(-1 !== ids.indexOf(118), true);
+            assert.strictEqual(-1 !== ids.indexOf(167), true);
+        });
+    }
+
     async testBuildTileAnnotationsWithAnimations()
     {
         this.runner.suite('CompositeTileAnnotationBuilder');
@@ -113,6 +139,58 @@ class TestCompositeTileAnnotationBuilder
         await this.runner.test('no annotations and no animations produce no entries', () => {
             let tileset = TestFixtures.buildElementsTileset({});
             assert.deepStrictEqual(this.builder.buildTileAnnotations(null, [], tileset), []);
+        });
+    }
+
+    appendBorderAnnotationKeys(cornerValues, entry)
+    {
+        for(let property of entry.properties){
+            if(-1 === property.value.indexOf('border-')){
+                continue;
+            }
+            cornerValues.push(entry.id+':'+property.value);
+        }
+    }
+
+    collectBorderAnnotationKeys(entries)
+    {
+        let cornerValues = [];
+        for(let entry of entries){
+            this.appendBorderAnnotationKeys(cornerValues, entry);
+        }
+        return cornerValues;
+    }
+
+    async testBorderCornersAnnotations()
+    {
+        this.runner.group('border corners annotations');
+        await this.runner.test('border corners are annotated with the border prefix', () => {
+            let tileOptions = {
+                bordersTiles: {top: 10, right: 11, bottom: 12, left: 13},
+                borderCornersTiles: {'top-left': 20, 'top-right': 21, 'bottom-left': 22, 'bottom-right': 23}
+            };
+            let tileset = TestFixtures.buildElementsTileset({});
+            let result = this.builder.buildTileAnnotations(tileOptions, [], tileset);
+            let cornerValues = this.collectBorderAnnotationKeys(result);
+            assert.ok(-1 !== cornerValues.indexOf('20:border-top-left'), 'Expected border-top-left on tile 20');
+            assert.ok(-1 !== cornerValues.indexOf('21:border-top-right'), 'Expected border-top-right on tile 21');
+            assert.ok(-1 !== cornerValues.indexOf('22:border-bottom-left'), 'Expected border-bottom-left on tile 22');
+            assert.ok(-1 !== cornerValues.indexOf('23:border-bottom-right'), 'Expected border-bottom-right on tile 23');
+        });
+        await this.runner.test('border corners flat ids are collected so the optimizer keeps them', () => {
+            let tileOptions = {
+                bordersTiles: {top: 10, right: 11, bottom: 12, left: 13},
+                borderCornersTiles: {'top-left': 20, 'top-right': 21, 'bottom-left': 22, 'bottom-right': 23}
+            };
+            let ids = this.builder.collectAnnotatedFlatIds(tileOptions, []);
+            for(let cornerId of [20, 21, 22, 23]){
+                assert.ok(-1 !== ids.indexOf(cornerId), 'Expected corner tile '+cornerId+' collected');
+            }
+        });
+        await this.runner.test('sides only tile options keep working without corners', () => {
+            let tileOptions = {bordersTiles: {top: 10, right: 11, bottom: 12, left: 13}};
+            let resolved = this.builder.resolveBordersTiles(tileOptions);
+            assert.deepStrictEqual(resolved, {top: 10, right: 11, bottom: 12, left: 13});
         });
     }
 

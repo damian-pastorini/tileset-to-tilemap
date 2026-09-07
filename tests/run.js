@@ -15,6 +15,7 @@ const { TestElementBuilder } = require('./unit/test-element-builder');
 const { TestCompositeBuilder } = require('./unit/test-composite-builder');
 const { TestCompositeTileAnnotationBuilder } = require('./unit/test-composite-tile-annotation-builder');
 const { TestCompositeWangsetBuilder } = require('./unit/test-composite-wangset-builder');
+const { TestTileOptionsMerger } = require('./unit/test-tile-options-merger');
 const { TestTileAnimationsBuilder } = require('./unit/test-tile-animations-builder');
 const { TestMultiAiAnalyzer } = require('./unit/test-multi-ai-analyzer');
 const { TestAnnotatedImageBuilder } = require('./unit/test-annotated-image-builder');
@@ -49,6 +50,7 @@ let testClasses = [
     TestCompositeBuilder,
     TestCompositeTileAnnotationBuilder,
     TestCompositeWangsetBuilder,
+    TestTileOptionsMerger,
     TestTileAnimationsBuilder,
     TestMultiAiAnalyzer,
     TestAnnotatedImageBuilder,
