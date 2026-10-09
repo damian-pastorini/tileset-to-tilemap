@@ -1,6 +1,6 @@
 {
     "name": "@reldens/tileset-to-tilemap",
-    "version": "0.30.0",
+    "version": "0.32.0",
     "description": "Reldens - Tileset to Tile Map",
     "author": "Damian A. Pastorini",
     "license": "MIT",
@@ -32,7 +32,7 @@
     "dependencies": {
         "@anthropic-ai/sdk": "0.132.1",
         "@google/genai": "2.28.0",
-        "@reldens/server-utils": "^0.64.0",
+        "@reldens/server-utils": "^0.66.0",
         "@reldens/utils": "^0.62.0",
         "image-js": "1.7.1",
         "archiver": "8.0.0",
