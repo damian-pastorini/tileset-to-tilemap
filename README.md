@@ -179,7 +179,7 @@ Input files stored in `generated-tile-map-elements/input/{sessionId}/`.
 
 - **sharp**: Pixel-level image processing and cropping
 - **image-js**: Connected component labeling for cluster detection
-- **archiver**: ZIP download of session output files
+- **fflate**: ZIP download of session output files
 - **multer**: Multipart file upload handling
 - **@anthropic-ai/sdk**: Claude AI provider
 - **@google/genai**: Gemini AI provider

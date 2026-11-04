@@ -38,6 +38,7 @@ const { TestMergeRoute } = require('./unit/test-merge-route');
 const { TestAiDetectRoute } = require('./unit/test-ai-detect-route');
 const { TestAiNameRoute } = require('./unit/test-ai-name-route');
 const { TestAiAssignLayersRoute } = require('./unit/test-ai-assign-layers-route');
+const { TestDownloadZipRoute } = require('./unit/test-download-zip-route');
 
 let testClasses = [
     TestHelpers,
@@ -72,7 +73,8 @@ let testClasses = [
     TestMergeRoute,
     TestAiDetectRoute,
     TestAiNameRoute,
-    TestAiAssignLayersRoute
+    TestAiAssignLayersRoute,
+    TestDownloadZipRoute
 ];
 
 function getTestMethods(instance)
