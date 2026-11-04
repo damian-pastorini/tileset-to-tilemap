@@ -22,6 +22,25 @@ class TestFixtures
         return mock;
     }
 
+    static buildElementsTileset(overrides)
+    {
+        return Object.assign({
+            tilesetColumns: 4,
+            tileRows: 4,
+            tileCount: 16,
+            animationsDefaultDuration: 200,
+            elements: [
+                {
+                    name: 'water-001',
+                    layers: [
+                        {type: 'ground', tiles: [[0, 2], [0, 3]]},
+                        {type: 'collisions', tiles: [[1, 2]]}
+                    ]
+                }
+            ]
+        }, overrides);
+    }
+
     static buildAiRequestBody(overrides)
     {
         return Object.assign({
